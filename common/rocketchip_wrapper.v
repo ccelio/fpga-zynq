@@ -210,7 +210,7 @@ module rocketchip_wrapper
         .S_AXI_arcache(4'b0011),
         .S_AXI_arid(S_AXI_arid),
         // .S_AXI_arlen(8'd7), // burst length = 8 transfers
-        .S_AXI_arlen(8'd1), // burst length = 1 transfers
+        .S_AXI_arlen(8'd0), // burst length = 1 transfers
         .S_AXI_arlock(1'b0),
         .S_AXI_arprot(3'b000),
         .S_AXI_arqos(4'b0000),
@@ -225,7 +225,7 @@ module rocketchip_wrapper
         .S_AXI_awcache(4'b0011),
         .S_AXI_awid(S_AXI_awid),
         // .S_AXI_awlen(8'd7), // burst length = 8 transfers
-        .S_AXI_awlen(8'd1), // burst length = 1 transfers
+        .S_AXI_awlen(8'd0), // burst length = 1 transfers
         .S_AXI_awlock(1'b0),
         .S_AXI_awprot(3'b000),
         .S_AXI_awqos(4'b0000),
@@ -408,7 +408,7 @@ module rocketchip_wrapper
 //  parameter st_WRITE_ACK = 3'b100;
 
   reg [1:0] state_r = st_IDLE; // for poweron global set/reset
-  reg write_count = 1'b0;
+  // reg write_count = 1'b0;
   // reg [2:0] write_count = 3'd0;
   // reg read_count = 1'b0;
 
@@ -417,7 +417,7 @@ module rocketchip_wrapper
      if (reset)
      begin
         state_r <= st_IDLE;
-        write_count <= 3'd0;
+        // write_count <= 3'd0;
         // read_count <= 1'b0;
         // mem_resp_data_buf <= 64'd0;
         // S_AXI_rlast_r <= 1'b0;
@@ -449,8 +449,8 @@ module rocketchip_wrapper
            st_WRITE : begin
               if (S_AXI_wready && mem_req_data_val)
               begin
-                 write_count <= write_count + 1;
-                 if (write_count /* == 3'd7 */)
+                 // write_count <= write_count + 1;
+                 // if (write_count /* == 3'd7 */)
 //                    state_r <= st_WRITE_ACK;
                     state_r <= st_IDLE;
               end
@@ -469,7 +469,7 @@ module rocketchip_wrapper
   assign S_AXI_arvalid = (state_r == st_READ);
   assign mem_req_cmd_rdy = ((state_r == st_START_WRITE) && S_AXI_awready) || ((state_r == st_READ) && S_AXI_arready);
   assign S_AXI_wvalid = (state_r == st_WRITE) && mem_req_data_val;
-  assign S_AXI_wlast = (state_r == st_WRITE) && write_count; // && (write_count == 3'd7);
+  assign S_AXI_wlast = (state_r == st_WRITE) && mem_req_data_val; // && (write_count == 3'd7);
 
   // assign S_AXI_rready = 1'b1;
   assign S_AXI_rready = mem_resp_rdy;
@@ -477,8 +477,8 @@ module rocketchip_wrapper
   assign mem_resp_val = S_AXI_rvalid; 
 
   // assign mem_req_data_rdy = (state_r == st_WRITE) && write_count[0] && S_AXI_wready;
-  assign mem_req_data_rdy = (state_r == st_WRITE) && write_count && S_AXI_wready;
-  assign S_AXI_addr = {4'h1, mem_req_addr[21:0], 6'd0};
+  assign mem_req_data_rdy = (state_r == st_WRITE) && mem_req_data_val && S_AXI_wready;
+  assign S_AXI_addr = {4'h1, mem_req_addr[25:0], 2'd0};
   // assign S_AXI_wdata = write_count[0] ? mem_req_data_bits[127:64] : mem_req_data_bits[63:0];
   assign S_AXI_wdata = {32'd0, mem_req_data_bits};
   assign S_AXI_bready = 1'b1; // (state_r == st_WRITE_ACK);
