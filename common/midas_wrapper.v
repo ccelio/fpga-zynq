@@ -1,7 +1,7 @@
 `timescale 1 ps / 1 ps
 `include "clocking.vh"
 
-module rocketchip_wrapper
+module midas_wrapper
    (DDR_addr,
     DDR_ba,
     DDR_cas_n,
@@ -77,16 +77,18 @@ module rocketchip_wrapper
   wire M_AXI_awvalid;
   wire M_AXI_bready;
   wire M_AXI_bvalid;
-  wire [31:0]M_AXI_rdata;
+  wire [63:0]M_AXI_rdata;
   wire M_AXI_rlast;
   wire M_AXI_rready;
   wire M_AXI_rvalid;
-  wire [31:0]M_AXI_wdata;
+  wire [63:0]M_AXI_wdata;
   wire M_AXI_wlast;
   wire M_AXI_wready;
   wire M_AXI_wvalid;
   wire [11:0] M_AXI_arid, M_AXI_awid; // outputs from ARM core
-  wire [11:0] M_AXI_bid, M_AXI_rid;   // inputs to ARM core
+  //MIDAS note; remove id fields because the AXI width converter supports
+  //single slave -> these ports are removed
+  //wire [11:0] M_AXI_bid, M_AXI_rid;   // inputs to ARM core
   wire [1:0] M_AXI_bresp, M_AXI_rresp;
 
   wire S_AXI_arready;
@@ -165,7 +167,7 @@ module rocketchip_wrapper
         .M_AXI_araddr(M_AXI_araddr),
         .M_AXI_arburst(M_AXI_arburst), // burst type
         .M_AXI_arcache(),
-        .M_AXI_arid(M_AXI_arid),
+        //.M_AXI_arid(M_AXI_arid),
         .M_AXI_arlen(M_AXI_arlen), // burst length (#transfers)
         .M_AXI_arlock(),
         .M_AXI_arprot(),
@@ -178,7 +180,7 @@ module rocketchip_wrapper
         .M_AXI_awaddr(M_AXI_awaddr),
         .M_AXI_awburst(M_AXI_awburst),
         .M_AXI_awcache(),
-        .M_AXI_awid(M_AXI_awid),
+        //.M_AXI_awid(M_AXI_awid),
         .M_AXI_awlen(M_AXI_awlen),
         .M_AXI_awlock(),
         .M_AXI_awprot(),
@@ -188,13 +190,13 @@ module rocketchip_wrapper
         .M_AXI_awsize(M_AXI_awsize),
         .M_AXI_awvalid(M_AXI_awvalid),
         //
-        .M_AXI_bid(M_AXI_bid),
+        //.M_AXI_bid(M_AXI_bid),
         .M_AXI_bready(M_AXI_bready),
         .M_AXI_bresp(M_AXI_bresp),
         .M_AXI_bvalid(M_AXI_bvalid),
         //
         .M_AXI_rdata(M_AXI_rdata),
-        .M_AXI_rid(M_AXI_rid),
+        //.M_AXI_rid(M_AXI_rid),
         .M_AXI_rlast(M_AXI_rlast),
         .M_AXI_rready(M_AXI_rready),
         .M_AXI_rresp(M_AXI_rresp),
@@ -261,71 +263,71 @@ module rocketchip_wrapper
   assign S_AXI_araddr = {4'd1, slave_araddr[27:0]};
   assign S_AXI_awaddr = {4'd1, slave_awaddr[27:0]};
 
-  NastiShim top(
+  MIDASPointerChaser top(
        .clk(host_clk),
        .reset(reset),
 
-       .io_master_ar_bits_addr(M_AXI_araddr),
-       .io_master_ar_bits_id(M_AXI_arid),
-       .io_master_ar_bits_len(M_AXI_arlen),
-       .io_master_ar_bits_size(M_AXI_arsize),
-       .io_master_ar_ready(M_AXI_arready),
-       .io_master_ar_valid(M_AXI_arvalid),
+       .io_hostSlavePort_ar_bits_addr(M_AXI_araddr),
+       .io_hostSlavePort_ar_bits_id(6'h0),
+       .io_hostSlavePort_ar_bits_len(M_AXI_arlen),
+       .io_hostSlavePort_ar_bits_size(M_AXI_arsize),
+       .io_hostSlavePort_ar_ready(M_AXI_arready),
+       .io_hostSlavePort_ar_valid(M_AXI_arvalid),
 
-       .io_master_aw_bits_addr(M_AXI_awaddr),
-       .io_master_aw_bits_id(M_AXI_awid),
-       .io_master_aw_bits_len(M_AXI_awlen),
-       .io_master_aw_bits_size(M_AXI_awsize),
-       .io_master_aw_ready(M_AXI_awready),
-       .io_master_aw_valid(M_AXI_awvalid),
+       .io_hostSlavePort_aw_bits_addr(M_AXI_awaddr),
+       .io_hostSlavePort_aw_bits_id(6'h0),
+       .io_hostSlavePort_aw_bits_len(M_AXI_awlen),
+       .io_hostSlavePort_aw_bits_size(M_AXI_awsize),
+       .io_hostSlavePort_aw_ready(M_AXI_awready),
+       .io_hostSlavePort_aw_valid(M_AXI_awvalid),
 
-       .io_master_b_bits_id(M_AXI_bid),
-       .io_master_b_bits_resp(M_AXI_bresp),
-       .io_master_b_ready(M_AXI_bready),
-       .io_master_b_valid(M_AXI_bvalid),
+       //.io_hostSlavePort_b_bits_id(M_AXI_bid),
+       .io_hostSlavePort_b_bits_resp(M_AXI_bresp),
+       .io_hostSlavePort_b_ready(M_AXI_bready),
+       .io_hostSlavePort_b_valid(M_AXI_bvalid),
 
-       .io_master_r_bits_data(M_AXI_rdata),
-       .io_master_r_bits_id(M_AXI_rid),
-       .io_master_r_bits_last(M_AXI_rlast),
-       .io_master_r_bits_resp(M_AXI_rresp),
-       .io_master_r_ready(M_AXI_rready),
-       .io_master_r_valid(M_AXI_rvalid),
+       .io_hostSlavePort_r_bits_data(M_AXI_rdata),
+       //.io_hostSlavePort_r_bits_id(M_AXI_rid),
+       .io_hostSlavePort_r_bits_last(M_AXI_rlast),
+       .io_hostSlavePort_r_bits_resp(M_AXI_rresp),
+       .io_hostSlavePort_r_ready(M_AXI_rready),
+       .io_hostSlavePort_r_valid(M_AXI_rvalid),
 
-       .io_master_w_bits_data(M_AXI_wdata),
-       .io_master_w_bits_last(M_AXI_wlast),
-       .io_master_w_ready(M_AXI_wready),
-       .io_master_w_valid(M_AXI_wvalid),
+       .io_hostSlavePort_w_bits_data(M_AXI_wdata),
+       .io_hostSlavePort_w_bits_last(M_AXI_wlast),
+       .io_hostSlavePort_w_ready(M_AXI_wready),
+       .io_hostSlavePort_w_valid(M_AXI_wvalid),
 
-       .io_slave_ar_bits_addr(slave_araddr),
-       .io_slave_ar_bits_id(S_AXI_arid),
-       .io_slave_ar_bits_len(S_AXI_arlen),
-       .io_slave_ar_bits_size(S_AXI_arsize),
-       .io_slave_ar_ready(S_AXI_arready),
-       .io_slave_ar_valid(S_AXI_arvalid),
+       .io_hostMasterPort_ar_bits_addr(slave_araddr),
+       .io_hostMasterPort_ar_bits_id(S_AXI_arid),
+       .io_hostMasterPort_ar_bits_len(S_AXI_arlen),
+       .io_hostMasterPort_ar_bits_size(S_AXI_arsize),
+       .io_hostMasterPort_ar_ready(S_AXI_arready),
+       .io_hostMasterPort_ar_valid(S_AXI_arvalid),
 
-       .io_slave_aw_bits_addr(slave_awaddr),
-       .io_slave_aw_bits_id(S_AXI_awid),
-       .io_slave_aw_bits_len(S_AXI_awlen),
-       .io_slave_aw_bits_size(S_AXI_awsize),
-       .io_slave_aw_ready(S_AXI_awready),
-       .io_slave_aw_valid(S_AXI_awvalid),
+       .io_hostMasterPort_aw_bits_addr(slave_awaddr),
+       .io_hostMasterPort_aw_bits_id(S_AXI_awid),
+       .io_hostMasterPort_aw_bits_len(S_AXI_awlen),
+       .io_hostMasterPort_aw_bits_size(S_AXI_awsize),
+       .io_hostMasterPort_aw_ready(S_AXI_awready),
+       .io_hostMasterPort_aw_valid(S_AXI_awvalid),
 
-       .io_slave_b_bits_id(S_AXI_bid),
-       .io_slave_b_bits_resp(S_AXI_bresp),
-       .io_slave_b_ready(S_AXI_bready),
-       .io_slave_b_valid(S_AXI_bvalid),
+       .io_hostMasterPort_b_bits_id(S_AXI_bid),
+       .io_hostMasterPort_b_bits_resp(S_AXI_bresp),
+       .io_hostMasterPort_b_ready(S_AXI_bready),
+       .io_hostMasterPort_b_valid(S_AXI_bvalid),
 
-       .io_slave_r_bits_data(S_AXI_rdata),
-       .io_slave_r_bits_id(S_AXI_rid),
-       .io_slave_r_bits_last(S_AXI_rlast),
-       .io_slave_r_bits_resp(S_AXI_rresp),
-       .io_slave_r_ready(S_AXI_rready),
-       .io_slave_r_valid(S_AXI_rvalid),
+       .io_hostMasterPort_r_bits_data(S_AXI_rdata),
+       .io_hostMasterPort_r_bits_id(S_AXI_rid),
+       .io_hostMasterPort_r_bits_last(S_AXI_rlast),
+       .io_hostMasterPort_r_bits_resp(S_AXI_rresp),
+       .io_hostMasterPort_r_ready(S_AXI_rready),
+       .io_hostMasterPort_r_valid(S_AXI_rvalid),
 
-       .io_slave_w_bits_data(S_AXI_wdata),
-       .io_slave_w_bits_last(S_AXI_wlast),
-       .io_slave_w_ready(S_AXI_wready),
-       .io_slave_w_valid(S_AXI_wvalid)
+       .io_hostMasterPort_w_bits_data(S_AXI_wdata),
+       .io_hostMasterPort_w_bits_last(S_AXI_wlast),
+       .io_hostMasterPort_w_ready(S_AXI_wready),
+       .io_hostMasterPort_w_valid(S_AXI_wvalid)
        );
 
 `ifndef differential_clock

@@ -149,7 +149,7 @@ proc create_root_design { parentCell } {
   set M_AXI [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:aximm_rtl:1.0 M_AXI ]
   set_property -dict [ list \
 CONFIG.ADDR_WIDTH {32} \
-CONFIG.DATA_WIDTH {32} \
+CONFIG.DATA_WIDTH {64} \
 CONFIG.FREQ_HZ {50000000} \
 CONFIG.PROTOCOL {AXI4} \
  ] $M_AXI

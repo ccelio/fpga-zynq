@@ -149,7 +149,7 @@ proc create_root_design { parentCell } {
   set M_AXI [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:aximm_rtl:1.0 M_AXI ]
   set_property -dict [ list \
 CONFIG.ADDR_WIDTH {32} \
-CONFIG.DATA_WIDTH {32} \
+CONFIG.DATA_WIDTH {64} \
 CONFIG.FREQ_HZ {25000000} \
 CONFIG.PROTOCOL {AXI4} \
  ] $M_AXI
@@ -447,10 +447,10 @@ CONFIG.preset {ZedBoard} \
   connect_bd_net -net proc_sys_reset_0_interconnect_aresetn [get_bd_pins axi_interconnect_0/ARESETN] [get_bd_pins axi_interconnect_1/ARESETN] [get_bd_pins proc_sys_reset_0/interconnect_aresetn]
   connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_pins axi_interconnect_0/M00_ARESETN] [get_bd_pins axi_interconnect_0/S00_ARESETN] [get_bd_pins axi_interconnect_1/M00_ARESETN] [get_bd_pins axi_interconnect_1/S00_ARESETN] [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
   connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_ports FCLK_RESET0_N] [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins processing_system7_0/FCLK_RESET0_N]
-  connect_bd_net -net rocketchip_clk_1 [get_bd_ports ext_clk_in] [get_bd_pins axi_interconnect_0/ACLK] [get_bd_pins axi_interconnect_0/M00_ACLK] [get_bd_pins axi_interconnect_0/S00_ACLK] [get_bd_pins axi_interconnect_1/ACLK] [get_bd_pins axi_interconnect_1/M00_ACLK] [get_bd_pins axi_interconnect_1/S00_ACLK] [get_bd_pins proc_sys_reset_0/slowest_sync_clk] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK]
+  connect_bd_net -net midas_clk_1 [get_bd_ports ext_clk_in] [get_bd_pins axi_interconnect_0/ACLK] [get_bd_pins axi_interconnect_0/M00_ACLK] [get_bd_pins axi_interconnect_0/S00_ACLK] [get_bd_pins axi_interconnect_1/ACLK] [get_bd_pins axi_interconnect_1/M00_ACLK] [get_bd_pins axi_interconnect_1/S00_ACLK] [get_bd_pins proc_sys_reset_0/slowest_sync_clk] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK]
 
   # Create address segments
-  create_bd_addr_seg -range 0x1000 -offset 0x43C00000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs M_AXI/Reg] SEG_zedboard_rocketchip_Reg
+  create_bd_addr_seg -range 0x1000 -offset 0x43C00000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs M_AXI/Reg] SEG_zedboard_midas_Reg
   create_bd_addr_seg -range 0x20000000 -offset 0x0 [get_bd_addr_spaces S_AXI] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] SEG_processing_system7_0_HP0_DDR_LOWOCM
 
   # Perform GUI Layout
@@ -475,7 +475,7 @@ preplace netloc S00_AXI_1 1 0 2 NJ 70 NJ
 preplace netloc processing_system7_0_FIXED_IO 1 3 2 NJ 90 NJ
 preplace netloc axi_interconnect_0_M00_AXI 1 4 1 NJ
 preplace netloc proc_sys_reset_0_peripheral_aresetn 1 1 3 400 300 NJ 300 1170
-preplace netloc rocketchip_clk_1 1 0 4 20 240 390 250 680 280 1150
+preplace netloc midas_clk_1 1 0 4 20 240 390 250 680 280 1150
 preplace netloc axi_interconnect_1_M00_AXI 1 2 1 N
 levelinfo -pg 1 0 200 540 910 1310 1470 -top 0 -bot 430
 ",
