@@ -439,9 +439,13 @@ CONFIG.preset {ZC706} \
   connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_ports FCLK_RESET0_N] [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins processing_system7_0/FCLK_RESET0_N]
 
   # Create address segments
-  create_bd_addr_seg -range 0x1000 -offset 0x43C00000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs M_AXI/Reg] SEG_system_Reg
+  create_bd_addr_seg -range 0x400000 -offset 0x43C00000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs M_AXI/Reg] SEG_system_Reg
   create_bd_addr_seg -range 0x20000000 -offset 0x0 [get_bd_addr_spaces S_AXI] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] SEG_processing_system7_0_HP0_DDR_LOWOCM
 
+  # Add a ILA to snoop the ARM -> FPGA AXI port
+  create_bd_cell -type ip -vlnv xilinx.com:ip:ila:6.0 ila_0
+  connect_bd_intf_net [get_bd_intf_ports M_AXI] [get_bd_intf_pins ila_0/SLOT_0_AXI]
+  connect_bd_net [get_bd_ports ext_clk_in] [get_bd_pins ila_0/clk]
   # Perform GUI Layout
   regenerate_bd_layout -layout_string {
    guistr: "# # String gsaved with Nlview 6.5.5  2015-06-26 bk=1.3371 VDI=38 GEI=35 GUI=JA:1.8
