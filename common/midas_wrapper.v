@@ -263,7 +263,7 @@ module midas_wrapper
   assign S_AXI_araddr = {4'd1, slave_araddr[27:0]};
   assign S_AXI_awaddr = {4'd1, slave_awaddr[27:0]};
 
-  MIDASPointerChaser top(
+  MIDASRISCVMini top(
        .clk(host_clk),
        .reset(reset),
 
