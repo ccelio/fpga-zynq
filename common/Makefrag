@@ -34,10 +34,6 @@ src/tcl/make_bitstream_$(CONFIG).tcl: $(common)/make_bitstream.tcl
 	sed 's/BOARD_NAME_HERE/$(BOARD)/g;s/CHISEL_CONFIG_HERE/$(CONFIG)/g' \
 		$(common)/make_bitstream.tcl > src/tcl/make_bitstream_$(CONFIG).tcl
 
-src/verilog/$(DESIGN).$(CONFIG).v:
-	cp $(base_dir)/../generated-src/$(DESIGN).v $(base_dir)/$(BOARD)/src/verilog/$(DESIGN).$(CONFIG).v
-rocket: src/verilog/$(DESIGN).$(CONFIG).v
-
 # Project generation
 # ------------------------------------------------------------------------------
 project = $(proj_name)/$(proj_name).xpr
