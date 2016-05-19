@@ -6,7 +6,7 @@ zedboard/zedboard_midas_*
 zedboard/src/tcl/zedboard_midas_*.tcl
 zedboard/src/tcl/make_bitstream_*.tcl
 zedboard/src/verilog/midas_wrapper.v
-zedboard/src/verilog/*NastiShim.v
+zedboard/src/verilog/MIDAS*.v
 zedboard/deliver_output
 zedboard/soft_build
 
@@ -14,7 +14,7 @@ zybo/zybo_midas_*
 zybo/src/tcl/zybo_midas_*.tcl
 zybo/src/tcl/make_bitstream_*.tcl
 zybo/src/verilog/midas_wrapper.v
-zybo/src/verilog/*NastiShim.v
+zybo/src/verilog/MIDAS*.v
 zybo/deliver_output
 zybo/soft_build
 
@@ -22,6 +22,6 @@ zc706/zc706_midas_*
 zc706/src/tcl/zc706_midas_*.tcl
 zc706/src/tcl/make_bitstream_*.tcl
 zc706/src/verilog/midas_wrapper.v
-zc706/src/verilog/*NastiShim.v
+zc706/src/verilog/MIDAS*.v
 zc706/deliver_output
 zc706/soft_build
