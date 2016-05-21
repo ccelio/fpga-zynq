@@ -71,7 +71,7 @@ module midas_wrapper
   wire [31:0]M_AXI_awaddr;
   wire [1:0]M_AXI_awburst;
   wire [7:0]M_AXI_awlen;
-  wire [3:0]M_AXI_wstrb;
+  wire [7:0]M_AXI_wstrb;
   wire M_AXI_awready;
   wire [2:0]M_AXI_awsize;
   wire M_AXI_awvalid;
@@ -250,7 +250,7 @@ module midas_wrapper
         .S_AXI_wdata(S_AXI_wdata),
         .S_AXI_wlast(S_AXI_wlast),
         .S_AXI_wready(S_AXI_wready),
-        .S_AXI_wstrb(8'hff),
+        .S_AXI_wstrb(S_AXI_wstrb),
         .S_AXI_wvalid(S_AXI_wvalid),
         .ext_clk_in(host_clk)
         );
@@ -295,6 +295,7 @@ module midas_wrapper
 
        .io_hostSlavePort_w_bits_data(M_AXI_wdata),
        .io_hostSlavePort_w_bits_last(M_AXI_wlast),
+       .io_hostSlavePort_w_bits_strb(M_AXI_wstrb),
        .io_hostSlavePort_w_ready(M_AXI_wready),
        .io_hostSlavePort_w_valid(M_AXI_wvalid),
 
@@ -326,6 +327,7 @@ module midas_wrapper
 
        .io_hostMasterPort_w_bits_data(S_AXI_wdata),
        .io_hostMasterPort_w_bits_last(S_AXI_wlast),
+       .io_hostMasterPort_w_bits_strb(S_AXI_wstrb),
        .io_hostMasterPort_w_ready(S_AXI_wready),
        .io_hostMasterPort_w_valid(S_AXI_wvalid)
        );

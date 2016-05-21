@@ -159,7 +159,7 @@ fetch-riscv-linux-deliver:
 clean:
 	rm -f *.log *.jou *.str
 	rm -rf $(BOARD)_midas_*
-	rm -f src/verilog/*NastiShim.*.v
+	rm -f src/verilog/MIDAS*.v
 	rm -f src/verilog/midas_wrapper.v
 	rm -f src/tcl/$(BOARD)_midas_*.tcl
 	rm -f src/tcl/make_bitstream.tcl
